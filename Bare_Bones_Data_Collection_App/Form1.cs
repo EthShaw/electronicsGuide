@@ -15,7 +15,7 @@ namespace Bare_Bones_Data_Collection_App
         /*
          * Set the following to match your hardware baud rate (standard is 9600)
          *
-         * Note: This code uses default Serial settings, and expects a newline character ('/n') delimiter between data samples
+         * Note: This code uses default Serial settings, and expects a newline character ('\n') delimiter between data samples
         */
         const int serialBaudRate = 9600;
 
@@ -54,6 +54,9 @@ namespace Bare_Bones_Data_Collection_App
 
             // Set up excel application
             excelApp = new excel.Application();
+
+            // Make the default Excel folder the current working directory
+            textBox_folderPath.Text = Environment.CurrentDirectory;
         }
 
         // Event that is triggered continuously (every half second as defined above)
@@ -71,7 +74,7 @@ namespace Bare_Bones_Data_Collection_App
             {
                 // Grab the data, looking for a 'newline' or 'linefeed' character as a 'delimiter'
                 // .. really you're just matching what is being sent from the Arduino (i.e. Serial.println('data');)
-                // .. where the 'ln' in 'println' is a newline character ('/n')
+                // .. where the 'ln' in 'println' is a newline character ('\n')
                 var dataIn = arduinoPort.ReadLine();
 
                 if (dataIn == string.Empty) return; // Verify there's something there
@@ -145,6 +148,8 @@ namespace Bare_Bones_Data_Collection_App
         {
             // Create a Dialog for the user to select a folder
             var folderDialog = new FolderBrowserDialog();
+            // Default to the already selected path
+            folderDialog.SelectedPath = textBox_folderPath.Text;
             var dialogResult = folderDialog.ShowDialog();
 
             // Make sure they've selected something, then set the file path
